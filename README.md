@@ -22,3 +22,7 @@ truffle migrate
 cd client
 npm start
 ```
+
+## testimonials
+
+This project is based on the react truffle box: https://www.trufflesuite.com/boxes/react
