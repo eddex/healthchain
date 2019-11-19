@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import HealthchainContract from "./contracts/Healthchain.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = { storageValue: '0', web3: null, accounts: null, contract: null };
 
   componentDidMount = async () => {
     try {
@@ -17,9 +17,9 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = HealthchainContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        HealthchainContract.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
@@ -38,11 +38,12 @@ class App extends Component {
   runExample = async () => {
     const { accounts, contract } = this.state;
 
+    console.log('hello1')
     // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
+    const i = await contract.methods.addDocument('0x23uih41249geiles1234').send({ from: accounts[0] });
+    console.log('hello2: ' + i)
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+    const response = await contract.methods.getDocument(i).call();
 
     // Update state with the result.
     this.setState({ storageValue: response });
