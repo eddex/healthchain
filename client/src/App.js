@@ -41,9 +41,9 @@ class App extends Component {
     console.log('hello1')
     // Stores a given value, 5 by default.
     const i = await contract.methods.addDocument('0x23uih41249geiles1234').send({ from: accounts[0] });
-    console.log('hello2: ' + i)
+    console.log(i)
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.getDocument(i).call();
+    const response = await contract.methods.getDocument(0).call();
 
     // Update state with the result.
     this.setState({ storageValue: response });
