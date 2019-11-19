@@ -38,10 +38,13 @@ class App extends Component {
   runExample = async () => {
     const { accounts, contract } = this.state;
 
-    console.log('hello1')
-    // Stores a given value, 5 by default.
-    const i = await contract.methods.addDocument('0x23uih41249geiles1234').send({ from: accounts[0] });
-    console.log(i)
+    console.log('hello12')
+    
+    // use call to get the value from this transaction, no changes made yet!!!
+    const documentIndex = await contract.methods.addDocument('0x23uih41249geiles12345678').call({ from: accounts[0] });
+    // actual changes here!!!
+    await contract.methods.addDocument('0x23uih41249geiles12345678').call({ from: accounts[0] });
+
     // Get the value from the contract to prove it worked.
     const response = await contract.methods.getDocument(0).call();
 
