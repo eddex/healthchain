@@ -40,16 +40,18 @@ class App extends Component {
 
     console.log('hello12')
     
+    const documentHash = '0x23uih41249geiles12345678'
     // use call to get the value from this transaction, no changes made yet!!!
-    const documentIndex = await contract.methods.addDocument('0x23uih41249geiles12345678').call({ from: accounts[0] });
+    const documentIndex = await contract.methods.addDocument(documentHash).call();
     // actual changes here!!!
-    await contract.methods.addDocument('0x23uih41249geiles12345678').call({ from: accounts[0] });
+    await contract.methods.addDocument(documentHash).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.getDocument(0).call();
+    const response = await contract.methods.getDocument(documentIndex).call();
 
     // Update state with the result.
     this.setState({ storageValue: response });
+    console.log("response from getDocument", response)
   };
 
   render() {
