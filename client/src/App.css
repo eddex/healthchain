@@ -1,33 +1,22 @@
 html, body {
   height: 100%;
-  background-image: linear-gradient(to bottom right, blue, cyan);
+  background-image: linear-gradient(to bottom right, #007427, #00d447);
 }
 
 .App {
-  width: 70%;
-  margin: auto;
-  margin-top: 4rem;
+  margin: 1rem;
 }
 
 .card-body {
   padding: 1rem;
 }
 
-.App-logo {
-  height: 40vmin;
+.header-icon {
+  font-size: 2rem;
+  margin-right: 0.5rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+.debug-buttons {
+  margin-bottom: 1rem;
+  margin-right: 0.3rem;
 }
