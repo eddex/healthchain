@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HealthchainContract from "./contracts/Healthchain.json";
 import getWeb3 from "./getWeb3";
-
+import 'bootstrap/dist/css/bootstrap.css';
 import "./App.css";
 
 class App extends Component {
@@ -54,23 +54,38 @@ class App extends Component {
     console.log("response from getDocument", response)
   };
 
+  uploadMedicalRecord = async (medicalRecord) => {
+    const { accounts, contract } = this.state;
+    const documentIndex = await contract.methods.addDocument(medicalRecord).call();
+    await contract.methods.addDocument(medicalRecord).send({ from: accounts[0] });
+    const response = await contract.methods.getDocument(documentIndex).call();
+
+    // Update state with the result.
+    this.setState({ storageValue: response });
+  }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <div className="card">
+          <div className="card-header">
+            <h1>HEALTHCHAIN</h1>
+          </div>
+          <div className="card-body">
+            <h2>Upload a medical record</h2>
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="basic-addon1">Medical record:</span>
+              </div>
+              <input id="medical-record-input" type="text" className="form-control" placeholder="todo: this will be a file upload" />
+            </div>
+            <button className="btn btn-primary" onClick={() => this.uploadMedicalRecord(document.getElementById('medical-record-input').value)}>upload</button>
+            <div>The stored value is: {this.state.storageValue}</div>
+          </div>
+        </div>
       </div>
     );
   }

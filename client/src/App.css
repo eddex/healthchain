@@ -1,5 +1,16 @@
+html, body {
+  height: 100%;
+  background-image: linear-gradient(to bottom right, blue, cyan);
+}
+
 .App {
-  text-align: center;
+  width: 70%;
+  margin: auto;
+  margin-top: 4rem;
+}
+
+.card-body {
+  padding: 1rem;
 }
 
 .App-logo {
