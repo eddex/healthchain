@@ -10,6 +10,7 @@ contract Healthchain {
 
   function getDocument(uint index) public view returns (string memory) {
     require(index >= 0, 'index must be >= 0!');
+    require(index < documentHashes.length, 'index out of range!');
     return documentHashes[index];
   }
 }
