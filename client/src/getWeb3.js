@@ -11,6 +11,7 @@ const getWeb3 = () =>
           // Request account access if needed
           await window.ethereum.enable();
           // Acccounts now exposed
+          console.log("web3 window.ethereum.");
           resolve(web3);
         } catch (error) {
           reject(error);

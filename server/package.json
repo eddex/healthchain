@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "^4.17.1",
+    "web3": "1.2.2"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "env": {
+    "es6": true
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.6.0",
+    "nodemon": "^2.0.1"
+  }
+}
