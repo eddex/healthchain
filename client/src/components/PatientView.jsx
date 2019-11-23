@@ -1,34 +1,53 @@
 import React, { useState } from "react"
 import './Components.css'
 
-const uploadMedicalRecord = async (contract, accounts, medicalRecord) => {
+const uploadMedicalRecord = async (contract, accounts, medicalRecordInput) => {
 
-    // use call to get the value from this transaction, no changes made yet!!!
-    const documentIndex = await contract.methods.addDocument(medicalRecord).call();
+    const file = medicalRecordInput.files[0]
+    console.log(file)
+    const formData = new FormData()
+    formData.append(medicalRecordInput.id, file)
+    const response = await fetch('http://localhost:3001/UploadMedicalEvidence', {
+      method: 'POST',
+      headers: {
+      },
+      body: formData
+    })
+    const data = await response.json().catch(err => console.log(err))
+    try {
+        console.log(data.hash) // Handle the success response object
 
-    // actual changes here!!!
-    await contract.methods.addDocument(medicalRecord).send({ from: accounts[0] });
+        if (!data.hash) return 'Upload failed. Try again later.'
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.getDocument(documentIndex).call();
+        // use call to get the value from this transaction, no changes made yet!!!
+        const documentIndex = await contract.methods.addDocument(data.hash).call();
+        // actual changes here!!!
+        await contract.methods.addDocument(data.hash).send({ from: accounts[0] });
+        // Get the value from the contract to prove it worked.
+        const documentHash = await contract.methods.getDocument(documentIndex).call();
 
-    console.log("response from getDocument", response)
-    return response
+        console.log("response from getDocument", documentHash)
+        return 'Successfully uploaded medical record \'' + file.name + '\' and added it to the blockchain as \'' + documentHash + '\''
+    }
+    catch(error) {
+        console.log(error) // Handle the error response object
+        return 'Please select a file to upload.'
+    };
 }
 
 const PatientView = ({contract, accounts}) => {
-    const [storedValue, setStoredValue] = useState()
+    const [uploadResponse, setUploadResponse] = useState()
     return (<div>
         <h2>Upload a medical record</h2>
         <div className="input-group mb-3">
-            <input type="file" className="form-control-file" id="medical-record-input"></input>
+            <input type="file" className="form-control-file" id="medicalRecord"></input>
         </div>
         <button className="btn btn-primary" onClick={async () => {
-            let documentHash = await uploadMedicalRecord(contract, accounts, document.getElementById('medical-record-input').value)
-            setStoredValue(documentHash)
+            let documentHash = await uploadMedicalRecord(contract, accounts, document.getElementById('medicalRecord'))
+            setUploadResponse(documentHash)
             }}>upload</button>
-        {storedValue &&
-            <div>Successfully stored medical record: {storedValue}</div>
+        {uploadResponse &&
+            <div>{uploadResponse}</div>
         }
 
         <hr />
