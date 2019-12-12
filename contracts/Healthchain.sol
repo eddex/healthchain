@@ -1,16 +1,20 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract Healthchain {
-  string[] public documentHashes;
 
+  mapping (address => string[]) public documents;
+
+  /* Add a medical record.
+   * Returns the index of the medical record.
+   */
   function addDocument(string memory documentHash) public returns (uint) {
+    address from = msg.sender;
     // push returns the array length
-    return documentHashes.push(documentHash) - 1;
+    return documents[from].push(documentHash) - 1;
   }
 
-  function getDocument(uint index) public view returns (string memory) {
-    require(index >= 0, 'index must be >= 0!');
-    require(index < documentHashes.length, 'index out of range!');
-    return documentHashes[index];
+  function getMyDocuments() public view returns (string[] memory) {
+    return documents[msg.sender];
   }
 }
