@@ -9,7 +9,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 import LogInOrRegister from "./components/LogInOrRegister";
 
 class App extends Component {
-  state = { web3: null, accounts: null, contract: null, user: null, isDoctor: false };
+  state = {
+    web3: null,
+    accounts: null,
+    contract: null,
+    user: null,
+    isDoctor: false,
+    accountId: null
+  };
 
   componentDidMount = async () => {
     try {
@@ -45,37 +52,33 @@ class App extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
 
-    const updateLogIn = () => {
+    const updateLogInFromLocalStorage = () => {
       const user = localStorage.getItem('user')
       const isDoctor = localStorage.getItem('isDoctor') === 'true'
-      this.setState({ user, isDoctor })
+      const accountId = parseInt(localStorage.getItem('accountId'))
+      this.setState({ user, isDoctor, accountId })
     }
-    document.addEventListener('logInSuccessful', updateLogIn, false)
+    document.addEventListener('logInSuccessful', updateLogInFromLocalStorage, false)
+
+    const changeLogIn = (user, isDoctor, accountId) => {
+      localStorage.setItem('user', user)
+      this.setState({ user, isDoctor, accountId })
+    }
 
     return (
       <div className="App">
 
         {/* DEBUG STUFF */}
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-          localStorage.setItem('user', 'Mr Debug')
-          const user = localStorage.getItem('user')
-          const isDoctor = false
-          this.setState({ user, isDoctor })
+          changeLogIn('Mr. Debug', false, 0)
         }}>Log in as patient</button>
 
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-          localStorage.setItem('user', 'Dr. Debug')
-          const user = localStorage.getItem('user')
-          const isDoctor = true
-          this.setState({ user, isDoctor })
+          changeLogIn('Dr. Debug', true, 1)
         }}>Log in as doctor</button>
 
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-          localStorage.removeItem('user')
-          localStorage.removeItem('isDoctor')
-          const user = null
-          const isDoctor = false
-          this.setState({ user, isDoctor })
+          changeLogIn(null, null, null)
         }}>Log off</button>
 
         <div className="card">

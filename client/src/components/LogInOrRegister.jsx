@@ -17,10 +17,12 @@ const LogInOrRegister = () => {
     if (email.includes('doctor')) {
       localStorage.setItem('user', 'Dr. Dumbledore')
       localStorage.setItem('isDoctor', true)
+      localStorage.setItem('accountId', 2)
       dispatchLogInSuccessEvent()
     } else {
       localStorage.setItem('user', 'Max Mustermann')
       localStorage.setItem('isDoctor', false)
+      localStorage.setItem('accountId', 3)
       dispatchLogInSuccessEvent()
     }
   }
