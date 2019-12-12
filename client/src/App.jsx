@@ -85,6 +85,9 @@ class App extends Component {
               <span className="header-icon oi oi-grid-three-up"></span>
               HEALTHCHAIN
             </h1>
+            {this.state.user &&
+              <h4>Logged in as {this.state.user}</h4>
+            }
           </div>
 
           <div className="card-body">
