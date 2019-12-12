@@ -1,10 +1,10 @@
 # healthchain
 Store your medical records in a blockchain and give doctors permissions when they need it :hospital:
 
-:warning: **disclaimer** :warning:
+### :warning: :warning: :warning:
 This projects is a proof of concept and by no means ready to use in real world use cases. Deploying the smart contract on the real ethereum network might result in high costs!
 
-## setup environment
+## setup development environment
 
 1. Install Ganche from the [official webpage](https://www.trufflesuite.com/ganache) or the latest [release on github](https://github.com/trufflesuite/ganache/releases).
 2. run `npm install truffle -g` to install truffle globally
