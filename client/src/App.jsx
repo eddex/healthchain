@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import LogInOrRegister from "./components/LogInOrRegister";
 
 class App extends Component {
-  state = { storageValue: '0', web3: null, accounts: null, contract: null, jwt: null };
+  state = { web3: null, accounts: null, contract: null, user: null, isDoctor: false };
 
   componentDidMount = async () => {
     try {
@@ -37,39 +37,46 @@ class App extends Component {
       );
       console.error(error);
     }
-
-    let jwt = localStorage.getItem('jwt')
-    this.setState({ jwt })
   };
 
   render() {
+
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+
+    const updateLogIn = () => {
+      const user = localStorage.getItem('user')
+      const isDoctor = localStorage.getItem('isDoctor') === 'true'
+      this.setState({ user, isDoctor })
+    }
+    document.addEventListener('logInSuccessful', updateLogIn, false)
+
     return (
       <div className="App">
 
         {/* DEBUG STUFF */}
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-            localStorage.setItem('jwt', 'debug')
-            const jwt = localStorage.getItem('jwt')
-            const isDoctor = false
-            this.setState({jwt, isDoctor})
-            }}>Log in as patient</button>
+          localStorage.setItem('user', 'Mr Debug')
+          const user = localStorage.getItem('user')
+          const isDoctor = false
+          this.setState({ user, isDoctor })
+        }}>Log in as patient</button>
 
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-            localStorage.setItem('jwt', 'debug')
-            const jwt = localStorage.getItem('jwt')
-            const isDoctor = true
-            this.setState({jwt, isDoctor})
-            }}>Log in as doctor</button>
+          localStorage.setItem('user', 'Dr. Debug')
+          const user = localStorage.getItem('user')
+          const isDoctor = true
+          this.setState({ user, isDoctor })
+        }}>Log in as doctor</button>
 
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-            localStorage.removeItem('jwt')
-            const jwt = null
-            const isDoctor = false
-            this.setState({jwt, isDoctor})
-            }}>Log off</button>
+          localStorage.removeItem('user')
+          localStorage.removeItem('isDoctor')
+          const user = null
+          const isDoctor = false
+          this.setState({ user, isDoctor })
+        }}>Log off</button>
 
         <div className="card">
 
@@ -81,13 +88,13 @@ class App extends Component {
           </div>
 
           <div className="card-body">
-            {!this.state.jwt && !this.state.isDoctor &&
+            {!this.state.user && !this.state.isDoctor &&
               <LogInOrRegister />
             }
-            {this.state.jwt && !this.state.isDoctor &&
+            {this.state.user && !this.state.isDoctor &&
               <PatientView accounts={this.state.accounts} contract={this.state.contract} />
             }
-            {this.state.jwt && this.state.isDoctor &&
+            {this.state.user && this.state.isDoctor &&
               <DoctorView />
             }
           </div>
