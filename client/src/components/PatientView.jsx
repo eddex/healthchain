@@ -22,9 +22,9 @@ const uploadMedicalRecord = async (contract, accounts, medicalRecordInput) => {
         // use call to get the value from this transaction, no changes made yet!!!
         const documentIndex = await contract.methods.addDocument(data.hash).call();
         // actual changes here!!!
-        await contract.methods.addDocument(data.hash).send({ from: accounts[0] });
+        await contract.methods.addDocument(data.hash).send({ from: accounts[1] });
         // Get the value from the contract to prove it worked.
-        const documentHash = await contract.methods.getMyDocuments().call();
+        const documentHash = await contract.methods.getMyDocuments().call({ from: accounts[1], gas: 90000 });
 
         console.log("response from getDocument", documentHash)
         return 'Successfully uploaded medical record \'' + file.name + '\' and added it to the blockchain as \'' + documentHash + '\''
