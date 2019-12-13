@@ -1,5 +1,6 @@
 import React from "react"
 import './Components.css'
+import { doctors, patients } from '../helpers/users'
 
 const LogInOrRegister = () => {
 
@@ -15,14 +16,14 @@ const LogInOrRegister = () => {
     const email = logInEmailRef.current.value
     console.log('try log in as: ' + email)
     if (email.includes('doctor')) {
-      localStorage.setItem('user', 'Dr. Dumbledore')
+      localStorage.setItem('user', doctors[0].name)
       localStorage.setItem('isDoctor', true)
-      localStorage.setItem('accountId', 2)
+      localStorage.setItem('accountId', doctors[0].account)
       dispatchLogInSuccessEvent()
     } else {
-      localStorage.setItem('user', 'Max Mustermann')
+      localStorage.setItem('user', patients[0].name)
       localStorage.setItem('isDoctor', false)
-      localStorage.setItem('accountId', 3)
+      localStorage.setItem('accountId', patients[0].account)
       dispatchLogInSuccessEvent()
     }
   }
@@ -33,6 +34,7 @@ const LogInOrRegister = () => {
       return () => {
         logInElement.removeEventListener('click', logIn)
       }
+    /* eslint-disable-next-line */
     }, []
   )
 

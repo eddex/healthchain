@@ -7,6 +7,7 @@ import "./App.css";
 import 'open-iconic/font/css/open-iconic-bootstrap.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import LogInOrRegister from "./components/LogInOrRegister";
+import { doctors, patients } from './helpers/users'
 
 class App extends Component {
   state = {
@@ -44,6 +45,12 @@ class App extends Component {
       );
       console.error(error);
     }
+    if (this.state.contract) {
+      doctors.forEach(doctor => {
+        console.log(doctor.account)
+        this.state.contract.methods.registerAsDoctor().send({ from: this.state.accounts[doctor.account] })
+      });
+    }
   };
 
   render() {
@@ -62,6 +69,8 @@ class App extends Component {
 
     const changeLogIn = (user, isDoctor, accountId) => {
       localStorage.setItem('user', user)
+      localStorage.setItem('isDoctor', isDoctor)
+      localStorage.setItem('accountId', accountId)
       this.setState({ user, isDoctor, accountId })
     }
 
@@ -70,11 +79,11 @@ class App extends Component {
 
         {/* DEBUG STUFF */}
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-          changeLogIn('Mr. Debug', false, 0)
+          changeLogIn(patients[1].name, false, patients[1].account)
         }}>Log in as patient</button>
 
         <button className="btn btn-warning debug-buttons" onClick={async () => {
-          changeLogIn('Dr. Debug', true, 1)
+          changeLogIn(doctors[1].name, true, doctors[1].account)
         }}>Log in as doctor</button>
 
         <button className="btn btn-warning debug-buttons" onClick={async () => {
