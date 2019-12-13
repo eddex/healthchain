@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+/* ABIEncoderV2 is needed to return an array from a function. */
 pragma experimental ABIEncoderV2;
 
 contract Healthchain {
@@ -30,14 +31,32 @@ contract Healthchain {
    *
    * mapping: doctorsAddress -> patientsAddresses
    */
-  mapping (address => address[]) public doctors;
+  mapping (address => address[]) public doctorsPermissions;
 
+  address[] public doctors;
+
+  /**
+   * A doctor has to register himself in the doctors list.
+   * This is only done once.
+   */
   function registerAsDoctor() public {
     address from = msg.sender;
-    require(doctors[from][0] != from, 'You are already registered as a doctor!');
-    doctors[from].push(from);
+    require(doctorsPermissions[from][0] != from, 'You are already registered as a doctor!');
+    doctorsPermissions[from].push(from);
   }
 
+  /**
+   * Allow a doctor to view all your documents.
+   */
   function giveAccessToDoctor(address doctorsAddress) public {
+    // todo
+  }
+
+  /**
+   * Revoke a doctors access to your documents.
+   */
+  function revokeAccessFromDoctor(address doctor, uint index) public {
+    require(doctorsPermissions[doctor][index] == msg.sender, 'You can only revoke access to your own documents.');
+    delete doctorsPermissions[doctor][index];
   }
 }
