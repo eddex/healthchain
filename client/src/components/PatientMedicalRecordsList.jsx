@@ -1,5 +1,4 @@
 import React from "react"
-import './Components.css'
 import download from 'downloadjs'
 
 const getFileNameForHash = async (hash) => {

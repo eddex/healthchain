@@ -1,5 +1,4 @@
 import React from "react"
-import './Components.css'
 import { doctors, patients } from '../helpers/users'
 
 const LogInOrRegister = () => {

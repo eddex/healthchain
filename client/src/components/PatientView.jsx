@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
 import ReactDOM from 'react-dom'
-import './Components.css'
 import DoctorsList from "./DoctorsList"
 import { doctors } from '../helpers/users'
 import PatientMedicalRecordsList from "./PatientMedicalRecordsList"
