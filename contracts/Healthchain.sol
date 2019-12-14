@@ -18,7 +18,7 @@ contract Healthchain {
   }
 
   /**
-   * Get all documents of the user who calls this function.
+   * Get all medical records of a user.
    */
   function getDocuments(address user) public view returns (string[] memory) {
     return documents[user];
