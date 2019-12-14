@@ -5,8 +5,10 @@ import DoctorsList from "./DoctorsList"
 import { doctors } from '../helpers/users'
 import PatientMedicalRecordsList from "./PatientMedicalRecordsList"
 
+/**
+ * Upload a document to the server and add the document hash to the smart contract.
+ */
 const uploadMedicalRecord = async (contract, accounts, accountId, medicalRecordInput) => {
-
   const file = medicalRecordInput.files[0]
   console.log(file)
   const formData = new FormData()
@@ -50,7 +52,7 @@ const PatientView = ({ contract, accounts, accountId }) => {
       ReactDOM.render(<PatientMedicalRecordsList items={documents} />, medicalRecordsContainer)
     }
     getDocuments()
-  }, [])
+  }, [uploadResponse])
 
   return (<div>
     <h2>Upload a medical record</h2>
@@ -69,8 +71,11 @@ const PatientView = ({ contract, accounts, accountId }) => {
     <h2>Manage permissions</h2>
     <h5>If you give access to a doctor, the doctor is able to view all your medical records.</h5>
     <DoctorsList items={
-      [{ name: doctors[0].name, hash: accounts[doctors[0].account] },
-      { name: doctors[1].name, hash: accounts[doctors[1].account] }] }>
+      [{ name: doctors[0].name, address: accounts[doctors[0].account] },
+      { name: doctors[1].name, address: accounts[doctors[1].account] }] }
+      contract={contract}
+      accounts={accounts}
+      accountId={accountId}>
     </DoctorsList>
 
     <h2>Manage your medical records</h2>
