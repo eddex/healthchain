@@ -1,13 +1,17 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
+import ReactDOM from 'react-dom'
 import './Components.css'
+import DoctorsList from "./DoctorsList"
+import { doctors } from '../helpers/users'
+import PatientMedicalRecordsList from "./PatientMedicalRecordsList"
 
-const uploadMedicalRecord = async (contract, accounts, medicalRecordInput) => {
+const uploadMedicalRecord = async (contract, accounts, accountId, medicalRecordInput) => {
 
   const file = medicalRecordInput.files[0]
   console.log(file)
   const formData = new FormData()
   formData.append(medicalRecordInput.id, file)
-  const response = await fetch('http://localhost:3001/UploadMedicalEvidence', {
+  const response = await fetch('http://localhost:3001/UploadMedicalEvidence/', {
     method: 'POST',
     headers: {
     },
@@ -19,13 +23,14 @@ const uploadMedicalRecord = async (contract, accounts, medicalRecordInput) => {
     console.log(data.hash) // Handle the success response object
 
     // use call to get the value from this transaction, no changes made yet!!!
-    const documentIndex = await contract.methods.addDocument(data.hash).call();
+    const documentIndex = await contract.methods.addDocument(data.hash).call({ from: accounts[accountId] });
     // actual changes here!!!
-    await contract.methods.addDocument(data.hash).send({ from: accounts[1] });
+    await contract.methods.addDocument(data.hash).send({ from: accounts[accountId] });
     // Get the value from the contract to prove it worked.
-    const myDocuments = await contract.methods.getMyDocuments().call({ from: accounts[1], gas: 90000 });
+    const myDocuments = await contract.methods.getDocuments(accounts[accountId]).call({ from: accounts[accountId], gas: 100000 });
+    console.log(myDocuments)
     const documentHash = myDocuments[documentIndex];
-    console.log("response from getMyDocuments", documentHash)
+    console.log("response from getDocuments", documentHash)
     return 'Successfully uploaded medical record \'' + file.name + '\' and added it to the blockchain as \'' + documentHash + '\''
   }
   catch (error) {
@@ -34,15 +39,26 @@ const uploadMedicalRecord = async (contract, accounts, medicalRecordInput) => {
   };
 }
 
-const PatientView = ({ contract, accounts }) => {
+const PatientView = ({ contract, accounts, accountId }) => {
   const [uploadResponse, setUploadResponse] = useState()
+
+  useEffect(() => {
+    async function getDocuments() {
+      const documents = await contract.methods.getDocuments(accounts[accountId]).call({ from: accounts[accountId], gas: 100000 })
+      console.log(documents)
+      const medicalRecordsContainer = document.getElementById('medicalRecordsList')
+      ReactDOM.render(<PatientMedicalRecordsList items={documents} />, medicalRecordsContainer)
+    }
+    getDocuments()
+  }, [])
+
   return (<div>
     <h2>Upload a medical record</h2>
     <div className="input-group mb-3">
       <input type="file" className="form-control-file" id="medicalRecord"></input>
     </div>
     <button className="btn btn-primary" onClick={async () => {
-      const message = await uploadMedicalRecord(contract, accounts, document.getElementById('medicalRecord'))
+      const message = await uploadMedicalRecord(contract, accounts, accountId, document.getElementById('medicalRecord'))
       setUploadResponse(message)
     }}>upload</button>
     {uploadResponse &&
@@ -50,14 +66,16 @@ const PatientView = ({ contract, accounts }) => {
     }
 
     <hr />
-    <h2>Manage permissions of medical records</h2>
-    <h4>Step 1: Choose a doctor</h4>
-    <p>TODO</p>
-    <h4>Step 2: Select files</h4>
-    <p>TODO</p>
-    <button className="btn btn-primary" onClick={async () => {
-      console.log('TODO')
-    }}>Update permissions</button>
+    <h2>Manage permissions</h2>
+    <h5>If you give access to a doctor, the doctor is able to view all your medical records.</h5>
+    <DoctorsList items={
+      [{ name: doctors[0].name, hash: accounts[doctors[0].account] },
+      { name: doctors[1].name, hash: accounts[doctors[1].account] }] }>
+    </DoctorsList>
+
+    <h2>Manage your medical records</h2>
+    <h5>View or delete your medical records.</h5>
+    <div id="medicalRecordsList"></div>
   </div>
   )
 }

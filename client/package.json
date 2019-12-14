@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "downloadjs": "^1.4.7",
     "open-iconic": "^1.1.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",

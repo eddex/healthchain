@@ -46,9 +46,10 @@ class App extends Component {
       console.error(error);
     }
     if (this.state.contract) {
-      doctors.forEach(doctor => {
+      doctors.forEach(async doctor => {
         console.log(doctor.account)
-        this.state.contract.methods.registerAsDoctor().send({ from: this.state.accounts[doctor.account] })
+        const response = await this.state.contract.methods.registerAsDoctor().send({ from: this.state.accounts[doctor.account] })
+        console.log(response)
       });
     }
   };
@@ -107,7 +108,7 @@ class App extends Component {
               <LogInOrRegister />
             }
             {this.state.user && !this.state.isDoctor &&
-              <PatientView accounts={this.state.accounts} contract={this.state.contract} />
+              <PatientView accounts={this.state.accounts} contract={this.state.contract} accountId={this.state.accountId} />
             }
             {this.state.user && this.state.isDoctor &&
               <DoctorView />

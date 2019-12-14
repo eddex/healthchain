@@ -6,6 +6,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
+    "glob": "^7.1.6",
     "web3": "1.2.2"
   },
   "scripts": {

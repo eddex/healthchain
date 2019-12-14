@@ -20,8 +20,8 @@ contract Healthchain {
   /**
    * Get all documents of the user who calls this function.
    */
-  function getMyDocuments() public view returns (string[] memory) {
-    return documents[msg.sender];
+  function getDocuments(address user) public view returns (string[] memory) {
+    return documents[user];
   }
 
   /**
@@ -33,6 +33,9 @@ contract Healthchain {
    */
   mapping (address => address[]) public doctorsPermissions;
 
+  /**
+   * This is a list of all registered doctors.
+   */
   address[] public doctors;
 
   /**
@@ -43,13 +46,14 @@ contract Healthchain {
     address from = msg.sender;
     require(doctorsPermissions[from][0] != from, 'You are already registered as a doctor!');
     doctorsPermissions[from].push(from);
+    doctors.push(from);
   }
 
   /**
    * Allow a doctor to view all your documents.
    */
-  function giveAccessToDoctor(address doctorsAddress) public {
-    // todo
+  function giveAccessToDoctor(address doctor) public {
+    doctorsPermissions[doctor].push(msg.sender);
   }
 
   /**
@@ -58,5 +62,12 @@ contract Healthchain {
   function revokeAccessFromDoctor(address doctor, uint index) public {
     require(doctorsPermissions[doctor][index] == msg.sender, 'You can only revoke access to your own documents.');
     delete doctorsPermissions[doctor][index];
+  }
+
+  /**
+   * Returns all the patients addresses that gave the doctor access.
+   */
+  function getDoctorsPermissions(address doctor) public view returns (address[] memory) {
+    return doctorsPermissions[doctor];
   }
 }
