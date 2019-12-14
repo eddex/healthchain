@@ -44,7 +44,7 @@ contract Healthchain {
    */
   function registerAsDoctor() public {
     address from = msg.sender;
-    require(doctorsPermissions[from][0] != from, 'You are already registered as a doctor!');
+    require(doctorsPermissions[from].length <= 0, 'You are already registered as a doctor!');
     doctorsPermissions[from].push(from);
     doctors.push(from);
   }

@@ -20,9 +20,10 @@ const downloadMedicalRecord = async (hash) => {
 }
 
 const PatientMedicalRecordsList = ({ items: medicalRecords }) => {
-  console.log('records', medicalRecords)
   return (
     <div>
+      {!(medicalRecords && medicalRecords.length) &&
+        'No medical records uploaded yet.'}
       {medicalRecords && medicalRecords.length &&
         medicalRecords.map((medicalRecord, index) => {
           console.log(medicalRecord)

@@ -47,7 +47,6 @@ const PatientView = ({ contract, accounts, accountId }) => {
   useEffect(() => {
     async function getDocuments() {
       const documents = await contract.methods.getDocuments(accounts[accountId]).call({ from: accounts[accountId], gas: 100000 })
-      console.log(documents)
       const medicalRecordsContainer = document.getElementById('medicalRecordsList')
       ReactDOM.render(<PatientMedicalRecordsList items={documents} />, medicalRecordsContainer)
     }

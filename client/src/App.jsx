@@ -48,7 +48,8 @@ class App extends Component {
     if (this.state.contract) {
       doctors.forEach(async doctor => {
         console.log(doctor.account)
-        const response = await this.state.contract.methods.registerAsDoctor().send({ from: this.state.accounts[doctor.account] })
+        const response = await this.state.contract.methods.registerAsDoctor().call({ from: this.state.accounts[doctor.account], gas: 6000000 })
+        await this.state.contract.methods.registerAsDoctor().send({ from: this.state.accounts[doctor.account], gas: 6000000 })
         console.log(response)
       });
     }
