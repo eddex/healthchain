@@ -2,15 +2,20 @@ import React from "react"
 import './Components.css'
 import download from 'downloadjs'
 
-const downloadMedicalRecord = async (hash) => {
+const getFileNameForHash = async (hash) => {
   const response = await fetch('http://localhost:3001/GetFileName/' + hash)
   const data = await response.json().catch(err => console.log(err))
   if (!data || !data.name) return 'Upload failed. Try again later.'
   console.log(data.name)
+  return data.name
+}
+
+const downloadMedicalRecord = async (hash) => {
+  const name = await getFileNameForHash(hash)
   var x = new XMLHttpRequest();
   x.open("GET", "http://localhost:3001/DownloadMedicalEvidence/" + hash, true);
   x.responseType = "blob";
-  x.onload = function (e) { download(e.target.response, data.name, "image/png"); };
+  x.onload = function (e) { download(e.target.response, name, "image/png"); };
   x.send();
 }
 
@@ -27,7 +32,7 @@ const PatientMedicalRecordsList = ({ items: medicalRecords }) => {
               <button className='btn btn-primary' onClick={() => downloadMedicalRecord(medicalRecord)}>Download</button>
             </div>
             <div className='col-lg-2 m-1'>
-              <button className='btn btn-danger'>Delete</button>
+              <button disabled className='btn btn-danger'>Delete</button>
             </div>
           </div>
         })}
