@@ -2,8 +2,8 @@ import React from "react"
 import './Components.css'
 
 const giveAccessToDoctor = async (doctorAddress, contract, accounts, accountId) => {
-  await contract.methods.giveAccessToDoctor(accounts[1]).call({ from: accounts[accountId], gas: 100000 })
-  const permissions = await contract.methods.getDoctorsPermissions(accounts[1]).call({ from: accounts[accountId], gas: 100000 })
+  await contract.methods.giveAccessToDoctor(doctorAddress).send({ from: accounts[accountId], gas: 100000 })
+  const permissions = await contract.methods.getDoctorsPermissions(doctorAddress).call({ from: accounts[accountId], gas: 100000 })
   console.log(permissions)
 }
 
