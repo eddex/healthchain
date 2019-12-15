@@ -55,6 +55,7 @@ const PatientView = ({ contract, accounts, accountId }) => {
       )
     }
     getDocuments()
+  /* eslint-disable-next-line */
   }, [uploadResponse])
 
   useEffect(() => {
@@ -76,7 +77,8 @@ const PatientView = ({ contract, accounts, accountId }) => {
       }, 300);
     }
     getDoctors()
-  })
+  /* eslint-disable-next-line */
+  }, [])
 
   return (<div>
     <h2>Upload a medical record</h2>
