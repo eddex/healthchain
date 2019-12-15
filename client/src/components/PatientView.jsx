@@ -50,12 +50,15 @@ const PatientView = ({ contract, accounts, accountId }) => {
     async function getDocuments() {
       const documents = await contract.methods.getDocuments(accounts[accountId]).call({ from: accounts[accountId], gas: 100000 })
       ReactDOM.render(
-        <PatientMedicalRecordsList items={documents} userAddress={accounts[accountId]} patientAddress={accounts[accountId]} />,
+        <PatientMedicalRecordsList
+          items={documents}
+          userAddress={accounts[accountId]}
+          patientAddress={accounts[accountId]} />,
         medicalRecordsListRef.current
       )
     }
     getDocuments()
-  /* eslint-disable-next-line */
+    /* eslint-disable-next-line */
   }, [uploadResponse])
 
   useEffect(() => {
@@ -77,7 +80,7 @@ const PatientView = ({ contract, accounts, accountId }) => {
       }, 300);
     }
     getDoctors()
-  /* eslint-disable-next-line */
+    /* eslint-disable-next-line */
   }, [])
 
   return (<div>

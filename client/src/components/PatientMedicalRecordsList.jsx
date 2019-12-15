@@ -27,7 +27,7 @@ const PatientMedicalRecordsList = ({ items: medicalRecords, userAddress, patient
     <div>
       {!(medicalRecords && medicalRecords.length) &&
         'No medical records uploaded yet.'}
-      {medicalRecords && medicalRecords.length &&
+      {medicalRecords &&
         medicalRecords.map((medicalRecord, index) => {
           console.log(medicalRecord)
           return <div key={index} className='row'>

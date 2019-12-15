@@ -114,7 +114,7 @@ class App extends Component {
               <PatientView accounts={this.state.accounts} contract={this.state.contract} accountId={this.state.accountId} />
             }
             {this.state.user && this.state.isDoctor &&
-              <DoctorView />
+              <DoctorView accounts={this.state.accounts} contract={this.state.contract} accountId={this.state.accountId} />
             }
           </div>
 
