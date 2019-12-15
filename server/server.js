@@ -35,12 +35,6 @@ app.get('/', (req, res) => {
   res.send('hello world!')
 });
 
-// GET all accounts
-app.get('/accounts', async (req, res) => {
-  const accounts = await web3.eth.getAccounts()
-  res.send(accounts)
-})
-
 // POST a new medical record
 app.post('/UploadMedicalEvidence/', (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -57,6 +51,7 @@ app.post('/UploadMedicalEvidence/', (req, res) => {
   res.send({ 'hash': medicalRecord.md5 });
 })
 
+// GET the name of a file
 app.get('/GetFileName/:hash', (req, res) => {
   const hash = req.params.hash
   glob('./medical-records/' + hash + '*', (err, files) => {
@@ -67,6 +62,7 @@ app.get('/GetFileName/:hash', (req, res) => {
   })
 })
 
+// GET a document
 app.get('/DownloadMedicalEvidence/:doctor/:patient/:document', async (req, res) => {
   const documentHash = req.params.document
   const doctorAddress = req.params.doctor
