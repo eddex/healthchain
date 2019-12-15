@@ -43,14 +43,40 @@ const uploadMedicalRecord = async (contract, accounts, accountId, medicalRecordI
 const PatientView = ({ contract, accounts, accountId }) => {
   const [uploadResponse, setUploadResponse] = useState()
 
+  const medicalRecordsListRef = useRef()
+  const doctorsListRef = useRef()
+
   useEffect(() => {
     async function getDocuments() {
       const documents = await contract.methods.getDocuments(accounts[accountId]).call({ from: accounts[accountId], gas: 100000 })
-      const medicalRecordsContainer = document.getElementById('medicalRecordsList')
-      ReactDOM.render(<PatientMedicalRecordsList items={documents} />, medicalRecordsContainer)
+      ReactDOM.render(
+        <PatientMedicalRecordsList items={documents} userAddress={accounts[accountId]} patientAddress={accounts[accountId]} />,
+        medicalRecordsListRef.current
+      )
     }
     getDocuments()
   }, [uploadResponse])
+
+  useEffect(() => {
+    const getDoctors = async () => {
+      await doctors.map(async (doctor, index) => {
+        const permissions = await contract.methods.getDoctorsPermissions(accounts[doctor.account]).call({ from: accounts[accountId], gas: 100000 })
+        doctors[index].hasAccess = permissions.includes(accounts[accountId])
+      })
+      setTimeout(() => {
+        console.log(doctors[0].hasAccess)
+        ReactDOM.render(
+          <DoctorsList doctors={doctors}
+            contract={contract}
+            accounts={accounts}
+            accountId={accountId}>
+          </DoctorsList>,
+          doctorsListRef.current
+        )
+      }, 300);
+    }
+    getDoctors()
+  })
 
   return (<div>
     <h2>Upload a medical record</h2>
@@ -68,17 +94,11 @@ const PatientView = ({ contract, accounts, accountId }) => {
     <hr />
     <h2>Manage permissions</h2>
     <h5>If you give access to a doctor, the doctor is able to view all your medical records.</h5>
-    <DoctorsList items={
-      [{ name: doctors[0].name, address: accounts[doctors[0].account] },
-      { name: doctors[1].name, address: accounts[doctors[1].account] }] }
-      contract={contract}
-      accounts={accounts}
-      accountId={accountId}>
-    </DoctorsList>
+    <div ref={doctorsListRef}></div>
 
     <h2>Manage your medical records</h2>
     <h5>View or delete your medical records.</h5>
-    <div id="medicalRecordsList"></div>
+    <div ref={medicalRecordsListRef}></div>
   </div>
   )
 }

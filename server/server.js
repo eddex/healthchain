@@ -41,14 +41,6 @@ app.get('/accounts', async (req, res) => {
   res.send(accounts)
 })
 
-// GET a single medical evidence document by id
-app.get('/MedicalEvidence/:id', async (req, res) => {
-
-  const response = await healthchain_contract.methods.getDocument(req.params.id).call();
-  console.log("response from getDocument", response)
-  res.send(response)
-})
-
 // POST a new medical record
 app.post('/UploadMedicalEvidence/', (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -75,11 +67,26 @@ app.get('/GetFileName/:hash', (req, res) => {
   })
 })
 
-app.get('/DownloadMedicalEvidence/:hash', (req, res) => {
-  const hash = req.params.hash
-  console.log('trying to download ' + hash)
-  glob('./medical-records/' + hash + '*', (err, files) => {
-    if (err) return res.status(404).send('no file found for hash ' + hash)
+app.get('/DownloadMedicalEvidence/:doctor/:patient/:document', async (req, res) => {
+  const documentHash = req.params.document
+  const doctorAddress = req.params.doctor
+  const patientAddress = req.params.patient
+
+  try {
+    const doctorPermissions = await healthchain_contract.methods.getDoctorsPermissions(doctorAddress).call();
+    console.log(doctorPermissions)
+    if (!doctorPermissions.includes(patientAddress) && doctorAddress != patientAddress) return res.send('Access denied!')
+
+    const documents = await healthchain_contract.methods.getDocuments(patientAddress).call();
+    console.log(documents)
+    if (!documents.includes(documentHash)) return res.send('This document doesn\'t belong to the specified patient!')
+  } catch (err) {
+    return res.send('Access denied!')
+  }
+
+  console.log('trying to download ' + documentHash)
+  glob('./medical-records/' + documentHash + '*', (err, files) => {
+    if (err) return res.status(404).send('no file found for hash ' + documentHash)
 
     res.download(files[0]);
   })

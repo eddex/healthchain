@@ -9,16 +9,20 @@ const getFileNameForHash = async (hash) => {
   return data.name
 }
 
-const downloadMedicalRecord = async (hash) => {
-  const name = await getFileNameForHash(hash)
-  var x = new XMLHttpRequest();
-  x.open("GET", "http://localhost:3001/DownloadMedicalEvidence/" + hash, true);
+const downloadMedicalRecord = async (medicalRecord, userAddress, patientAddress) => {
+  const name = await getFileNameForHash(medicalRecord)
+  const x = new XMLHttpRequest();
+  const url = "http://localhost:3001/DownloadMedicalEvidence/" +
+    userAddress + "/" +
+    patientAddress + "/" +
+    medicalRecord
+  x.open("GET", url, true);
   x.responseType = "blob";
   x.onload = function (e) { download(e.target.response, name, "image/png"); };
   x.send();
 }
 
-const PatientMedicalRecordsList = ({ items: medicalRecords }) => {
+const PatientMedicalRecordsList = ({ items: medicalRecords, userAddress, patientAddress, isDoctor = false }) => {
   return (
     <div>
       {!(medicalRecords && medicalRecords.length) &&
@@ -29,11 +33,17 @@ const PatientMedicalRecordsList = ({ items: medicalRecords }) => {
           return <div key={index} className='row'>
             <div className='col-lg m-1'><b>{medicalRecord}</b></div>
             <div className='col-lg-2 m-1'>
-              <button className='btn btn-primary' onClick={() => downloadMedicalRecord(medicalRecord)}>Download</button>
+              <button className='btn btn-primary' onClick={
+                () => downloadMedicalRecord(medicalRecord, userAddress, patientAddress)}
+              >
+                Download
+              </button>
             </div>
-            <div className='col-lg-2 m-1'>
-              <button disabled className='btn btn-danger'>Delete</button>
-            </div>
+            {!isDoctor &&
+              <div className='col-lg-2 m-1'>
+                <button disabled className='btn btn-danger'>Delete</button>
+              </div>
+            }
           </div>
         })}
     </div>
