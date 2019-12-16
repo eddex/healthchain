@@ -34,16 +34,6 @@ contract Healthchain {
   mapping (address => address[]) public doctorsPermissions;
 
   /**
-   * A doctor has to register himself in the doctors list.
-   * This is only done once.
-   */
-  function registerAsDoctor() public {
-    address from = msg.sender;
-    require(doctorsPermissions[from].length <= 0, 'You are already registered as a doctor!');
-    doctorsPermissions[from].push(from);
-  }
-
-  /**
    * Allow a doctor to view all your documents.
    */
   function giveAccessToDoctor(address doctor) public {
