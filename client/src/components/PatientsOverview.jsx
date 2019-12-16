@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from "react"
-import ReactDOM from 'react-dom'
+import React from "react"
 import PatientMedicalRecordsList from './PatientMedicalRecordsList'
 
 const createPatientList = (patient, doctorsAddress) => {
@@ -25,7 +24,7 @@ const PatientsOverview = ({ patients, doctorsAddress }) => {
       {patients && patients.map((patient, index) => {
         console.log(patient)
         if (patient.address === '0x0000000000000000000000000000000000000000' ||
-          patient.address === doctorsAddress) return
+          patient.address === doctorsAddress) return ''
         return createPatientList(patient, doctorsAddress)
       })}
     </div>

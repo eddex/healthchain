@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react"
 import ReactDOM from 'react-dom'
-import PatientMedicalRecordsList from './PatientMedicalRecordsList'
 import PatientsOverview from "./PatientsOverview"
 
 const DoctorView = ({ contract, accounts, accountId }) => {
