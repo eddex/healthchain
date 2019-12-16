@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import download from 'downloadjs'
 
 const getFileNameForHash = async (hash) => {
@@ -23,6 +23,17 @@ const downloadMedicalRecord = async (medicalRecord, userAddress, patientAddress)
 }
 
 const PatientMedicalRecordsList = ({ items: medicalRecords, userAddress, patientAddress, isDoctor = false }) => {
+
+  useEffect(() => {
+    const getNames = async (id) => {
+      const nameElement = document.getElementById(id)
+      const name = await getFileNameForHash(id)
+      console.log(name)
+      nameElement.innerHTML = name.replace(id + '_', '')
+    }
+    medicalRecords.map((medicalRecord, index) => getNames(medicalRecord))
+  /* eslint-disable-next-line */
+  }, [])
   return (
     <div>
       {!(medicalRecords && medicalRecords.length) &&
@@ -31,7 +42,8 @@ const PatientMedicalRecordsList = ({ items: medicalRecords, userAddress, patient
         medicalRecords.map((medicalRecord, index) => {
           console.log(medicalRecord)
           return <div key={index} className='row'>
-            <div className='col-lg m-1'><b>{medicalRecord}</b></div>
+            <div id={medicalRecord} className='col-lg m-1 font-weight-bold'></div>
+            <div className='col-lg m-1'>{medicalRecord}</div>
             <div className='col-lg-2 m-1'>
               <button className='btn btn-primary' onClick={
                 () => downloadMedicalRecord(medicalRecord, userAddress, patientAddress)}
