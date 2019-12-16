@@ -33,7 +33,7 @@ const PatientMedicalRecordsList = ({ items: medicalRecords, userAddress, patient
     }
     medicalRecords.map((medicalRecord, index) => getNames(medicalRecord))
   /* eslint-disable-next-line */
-  }, [])
+  })
   return (
     <div>
       {!(medicalRecords && medicalRecords.length) &&
