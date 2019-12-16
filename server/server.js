@@ -62,15 +62,15 @@ app.get('/GetFileName/:hash', (req, res) => {
 })
 
 // GET a document
-app.get('/DownloadMedicalEvidence/:doctor/:patient/:document', async (req, res) => {
+app.get('/DownloadMedicalEvidence/:user/:patient/:document', async (req, res) => {
   const documentHash = req.params.document
-  const doctorAddress = req.params.doctor
+  const userAddress = req.params.user
   const patientAddress = req.params.patient
 
   try {
-    const doctorPermissions = await healthchain_contract.methods.getDoctorsPermissions(doctorAddress).call();
+    const doctorPermissions = await healthchain_contract.methods.getDoctorsPermissions(userAddress).call();
     console.log(doctorPermissions)
-    if (!doctorPermissions.includes(patientAddress) && doctorAddress != patientAddress) return res.send('Access denied!')
+    if (!doctorPermissions.includes(patientAddress) && userAddress != patientAddress) return res.send('Access denied!')
 
     const documents = await healthchain_contract.methods.getDocuments(patientAddress).call();
     console.log(documents)
