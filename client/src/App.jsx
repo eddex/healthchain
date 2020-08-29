@@ -45,6 +45,16 @@ class App extends Component {
       );
       console.error(error);
     }
+
+    const updateLogInFromLocalStorage = () => {
+      if (localStorage.getItem('user') === 'null') return
+      const user = localStorage.getItem('user')
+      const isDoctor = localStorage.getItem('isDoctor') === 'true'
+      const accountId = parseInt(localStorage.getItem('accountId'))
+      this.setState({ user, isDoctor, accountId })
+    }
+    document.addEventListener('logInSuccessful', updateLogInFromLocalStorage, false)
+    updateLogInFromLocalStorage()
   };
 
   render() {
@@ -52,14 +62,6 @@ class App extends Component {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
-
-    const updateLogInFromLocalStorage = () => {
-      const user = localStorage.getItem('user')
-      const isDoctor = localStorage.getItem('isDoctor') === 'true'
-      const accountId = parseInt(localStorage.getItem('accountId'))
-      this.setState({ user, isDoctor, accountId })
-    }
-    document.addEventListener('logInSuccessful', updateLogInFromLocalStorage, false)
 
     const changeLogIn = (user, isDoctor, accountId) => {
       localStorage.setItem('user', user)
